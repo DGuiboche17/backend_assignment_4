@@ -5,7 +5,8 @@ import {
     consoleLogger,
 } from "./api/v1/middleware/logger";
 import errorHandler from "./api/v1/middleware/errorHandler";
-import itemRoutes from "./api/v1/routes/itemRoutes"; // Your existing routes
+import userRoutes from "./api/v1/routes/userRoutes";
+import adminRoutes from "./api/v1/routes/adminRoutes"
 
 const app = express();
 
@@ -23,7 +24,8 @@ if (process.env.NODE_ENV === "production") {
 app.use(express.json());
 
 // API Routes
-app.use("/api/v1", itemRoutes);
+app.use("/api/v1", userRoutes);
+app.use("/api/v1/admin", adminRoutes);
 
 // Global error handling middleware (MUST be applied last)
 app.use(errorHandler);
