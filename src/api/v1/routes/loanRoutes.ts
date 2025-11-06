@@ -1,43 +1,43 @@
 import express from "express";
-import { validateRequest } from "../middleware/validate";
-import { itemSchema } from "../validations/itemValidation";
 import {
-    getAllItems,
-    createItem,
-    updateItem,
-    deleteItem,
-    getItemById,
-} from "../controllers/itemController";
+    createLoanHandler,
+    getLoansHandler,
+    getLoanByIdHandler,
+    updateLoanHandler,
+    deleteLoanHandler,
+} from "../controllers/loanController";
 import authenticate from "../middleware/authenticate";
 import isAuthorized from "../middleware/authorize";
 
 const router: express.Router = express.Router();
 
 router.post(
-    "/items",
+    "/loans",
     authenticate,
     isAuthorized({ hasRole: ["admin", "manager"] }),
-    validateRequest(itemSchema),
-    createItem
+    createLoanHandler
 );
 
-router.get("/items", authenticate, getAllItems);
+router.get("/loans",
+    isAuthorized({ hasRole: ["admin", "manager"] }), 
+    authenticate, getLoansHandler);
 
-router.get("/items/:id", authenticate, getItemById);
+router.get("/loans/:id", 
+    isAuthorized({ hasRole: ["admin", "manager"] }),
+    authenticate, getLoanByIdHandler);
 
 router.put(
-    "/items/:id",
+    "/loans/:id",
     authenticate,
     isAuthorized({ hasRole: ["admin", "manager"], allowSameUser: true }),
-    validateRequest(itemSchema),
-    updateItem
+    updateLoanHandler
 );
 
 router.delete(
-    "/items/:id",
+    "/loans/:id",
     authenticate,
     isAuthorized({ hasRole: ["admin", "manager"] }),
-    deleteItem
+    deleteLoanHandler
 );
 
 export default router;
