@@ -5,7 +5,7 @@ import { AuthenticationError } from "../errors/errors";
 import { getErrorMessage, getErrorCode } from "../utils/errorUtils";
 
 // Internal module imports
-import { auth } from "../../../config/firebaseConfig";
+import { auth } from "./../../../config/firebaseConfig";
 
 /**
  * Middleware to authenticate a user using a Firebase ID token.
@@ -34,15 +34,15 @@ const authenticate = async (
             : undefined;
 
         if (!token) {
-            next(
-                new AuthenticationError(
-                    "Unauthorized: No token provided",
-                    "TOKEN_NOT_FOUND"
-                )
+            throw new AuthenticationError(
+                "Unauthorized: No token provided",
+                "TOKEN_NOT_FOUND"
             );
         }
 
-        const decodedToken: DecodedIdToken = await auth.verifyIdToken(token);
+        const decodedToken: DecodedIdToken = await auth.verifyIdToken(
+            token
+        );
         res.locals.uid = decodedToken.uid;
         res.locals.role = decodedToken.role;
         next();
